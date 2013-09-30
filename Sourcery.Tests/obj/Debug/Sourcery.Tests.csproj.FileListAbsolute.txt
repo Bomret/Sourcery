@@ -1,0 +1,8 @@
+D:\Development\C#\Sourcery\Sourcery.Tests\bin\Debug\Sourcery.Tests.dll
+D:\Development\C#\Sourcery\Sourcery.Tests\bin\Debug\Sourcery.Tests.pdb
+D:\Development\C#\Sourcery\Sourcery.Tests\bin\Debug\Machine.Specifications.dll
+D:\Development\C#\Sourcery\Sourcery.Tests\bin\Debug\Sourcery.dll
+D:\Development\C#\Sourcery\Sourcery.Tests\bin\Debug\Sourcery.pdb
+D:\Development\C#\Sourcery\Sourcery.Tests\obj\Debug\Sourcery.Tests.csprojResolveAssemblyReference.cache
+D:\Development\C#\Sourcery\Sourcery.Tests\obj\Debug\Sourcery.Tests.dll
+D:\Development\C#\Sourcery\Sourcery.Tests\obj\Debug\Sourcery.Tests.pdb

@@ -1,0 +1,5 @@
+D:\Development\C#\Sourcery\Sourcery\bin\Debug\Sourcery.dll
+D:\Development\C#\Sourcery\Sourcery\bin\Debug\Sourcery.pdb
+D:\Development\C#\Sourcery\Sourcery\obj\Debug\Sourcery.csprojResolveAssemblyReference.cache
+D:\Development\C#\Sourcery\Sourcery\obj\Debug\Sourcery.dll
+D:\Development\C#\Sourcery\Sourcery\obj\Debug\Sourcery.pdb

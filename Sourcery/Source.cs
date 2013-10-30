@@ -11,7 +11,7 @@ namespace Sourcery
             return new FileSource(path);
         }
 
-        public static ISource FromUrl(Uri url)
+        public static ISource FromUri(Uri url)
         {
             return new UrlSource(url);
         }

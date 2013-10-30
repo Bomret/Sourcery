@@ -1,11 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Sourcery.Sources
 {
-    public class FileSource : ISource
+    public sealed class FileSource : ISource
     {
         private readonly string _path;
 
@@ -14,15 +14,77 @@ namespace Sourcery.Sources
             _path = path;
         }
 
-        public IEnumerable<string> ReadLines()
+        public string GetAsText()
         {
-            return File.ReadAllLines(_path);
+            return GetAsText(Encoding.UTF8);
         }
 
-        public IEnumerable<T> ReadAllLinesAs<T>(Func<byte, T> converter)
+        public string GetAsText(Encoding encoding)
         {
-            return File.ReadAllBytes(_path)
-                       .Select(converter);
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
+            using (var fs = File.Open(_path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                var content = fs.ReadToArray();
+
+                return encoding.GetString(content);
+            }
+        }
+
+        public Task<string> GetAsTextAsync()
+        {
+            return GetAsTextAsync(Encoding.UTF8);
+        }
+
+        public Task<string> GetAsTextAsync(Encoding encoding)
+        {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
+            return Task.Factory.StartNew(() =>
+            {
+                using (var fs = File.Open(_path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    var content = fs.ReadToArray();
+
+                    return encoding.GetString(content);
+                }
+            });
+        }
+
+        public byte[] GetAsByteArray()
+        {
+            using (var fs = File.Open(_path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                return fs.ReadToArray();
+            }
+        }
+
+        public Task<byte[]> GetAsByteArrayAsync()
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                using (var fs = File.Open(_path, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    return fs.ReadToArray();
+                }
+            });
+        }
+
+        public Stream GetAsStream()
+        {
+            return File.Open(_path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        }
+
+        public Task<Stream> GetAsStreamAsync()
+        {
+            return
+                Task.Factory.StartNew(() => File.Open(_path, FileMode.Open, FileAccess.Read, FileShare.Read) as Stream);
         }
     }
 }

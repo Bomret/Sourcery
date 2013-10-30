@@ -1,10 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Sourcery.Sources
 {
-    public class StreamSource : ISource
+    public sealed class StreamSource : ISource
     {
         private readonly Stream _stream;
 
@@ -13,27 +14,74 @@ namespace Sourcery.Sources
             _stream = stream;
         }
 
-        public IEnumerable<string> ReadLines()
+        public string GetAsText()
         {
-            using (var reader = new StreamReader(_stream))
-            {
-                while (!reader.EndOfStream)
-                {
-                    yield return reader.ReadLine();
-                }
-            }
+            return GetAsText(Encoding.UTF8);
         }
 
-        public IEnumerable<T> ReadAllLinesAs<T>(Func<byte, T> converter)
+        public string GetAsText(Encoding encoding)
         {
-            using (var reader = new StreamReader(_stream))
+            if (encoding == null)
             {
-                while (!reader.EndOfStream)
-                {
-                    var b = Convert.ToByte(reader.Read());
-                    yield return converter(b);
-                }
+                throw new ArgumentNullException("encoding");
             }
+
+            var data = _stream.ReadToArray();
+
+            return encoding.GetString(data);
+        }
+
+        public Task<string> GetAsTextAsync()
+        {
+            return GetAsTextAsync(Encoding.UTF8);
+        }
+
+        public Task<string> GetAsTextAsync(Encoding encoding)
+        {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
+            return Task.Factory.StartNew(() =>
+            {
+                var data = _stream.ReadToArray();
+
+                return encoding.GetString(data);
+            });
+        }
+
+        public byte[] GetAsByteArray()
+        {
+            var data = _stream.ReadToArray();
+
+            return data;
+        }
+
+        public Task<byte[]> GetAsByteArrayAsync()
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                var data = _stream.ReadToArray();
+
+                return data;
+            });
+        }
+
+        public Stream GetAsStream()
+        {
+            var returnStream = new MemoryStream();
+            _stream.CopyTo(returnStream);
+
+            return returnStream;
+        }
+
+        public Task<Stream> GetAsStreamAsync()
+        {
+            Stream returnStream = new MemoryStream();
+
+            return _stream.CopyToAsync(returnStream)
+                          .ContinueWith(_ => returnStream);
         }
     }
 }

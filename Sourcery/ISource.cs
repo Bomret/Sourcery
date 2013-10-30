@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Sourcery
 {
     public interface ISource
     {
-        IEnumerable<string> ReadLines();
+        string GetAsText();
+        string GetAsText(Encoding encoding);
+        Task<string> GetAsTextAsync();
+        Task<string> GetAsTextAsync(Encoding encoding);
 
-        IEnumerable<T> ReadAllLinesAs<T>(Func<byte, T> converter);
+        byte[] GetAsByteArray();
+        Task<byte[]> GetAsByteArrayAsync();
+
+        Stream GetAsStream();
+        Task<Stream> GetAsStreamAsync();
     }
 }

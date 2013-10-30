@@ -1,11 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Sourcery.Sources
 {
-    public class UrlSource : ISource
+    public sealed class UrlSource : ISource
     {
         private readonly Uri _url;
 
@@ -14,21 +15,78 @@ namespace Sourcery.Sources
             _url = url;
         }
 
-        public IEnumerable<string> ReadLines()
+        public string GetAsText()
         {
+            return GetAsText(Encoding.UTF8);
+        }
+
+        public string GetAsText(Encoding encoding)
+        {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
             using (var webClient = new WebClient())
             {
-                return webClient.DownloadString(_url)
-                                .Split(new[] {@"\n", @"\r\n", @"\r"}, StringSplitOptions.None);
+                var content = webClient.DownloadData(_url);
+
+                return encoding.GetString(content);
             }
         }
 
-        public IEnumerable<T> ReadAllLinesAs<T>(Func<byte, T> converter)
+        public Task<string> GetAsTextAsync()
+        {
+            return GetAsTextAsync(Encoding.UTF8);
+        }
+
+        public Task<string> GetAsTextAsync(Encoding encoding)
+        {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
+            return Task.Factory.StartNew(() =>
+            {
+                using (var webClient = new WebClient())
+                {
+                    var content = webClient.DownloadData(_url);
+
+                    return encoding.GetString(content);
+                }
+            });
+        }
+
+        public byte[] GetAsByteArray()
         {
             using (var webClient = new WebClient())
             {
-                return webClient.DownloadData(_url)
-                                .Select(converter);
+                return webClient.DownloadData(_url);
+            }
+        }
+
+        public Task<byte[]> GetAsByteArrayAsync()
+        {
+            using (var webClient = new WebClient())
+            {
+                return webClient.DownloadDataTaskAsync(_url);
+            }
+        }
+
+        public Stream GetAsStream()
+        {
+            using (var webClient = new WebClient())
+            {
+                return webClient.OpenRead(_url);
+            }
+        }
+
+        public Task<Stream> GetAsStreamAsync()
+        {
+            using (var webClient = new WebClient())
+            {
+                return webClient.OpenReadTaskAsync(_url);
             }
         }
     }

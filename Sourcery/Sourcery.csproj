@@ -40,6 +40,7 @@
     <Compile Include="Sources\FileSource.cs" />
     <Compile Include="Sources\StreamSource.cs" />
     <Compile Include="Sources\UrlSource.cs" />
+    <Compile Include="StreamExt.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
